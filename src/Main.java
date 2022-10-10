@@ -15,16 +15,28 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Main obj = new Main();
         Scanner scanner = new Scanner(System.in);
+        int i = 0;
+        do {
+            System.out.println("Para utilizar el programa, pulse 1, para salir pulse 2");
+            i = Integer.parseInt(scanner.nextLine());
 
-        System.out.println("Bienvenido a la calculadora de divisas\nA que divisa desea convertir? (eur, usd, eth, btc, bnb, etc)");
-        String divisa = scanner.nextLine().toLowerCase();
-        System.out.println("Que divisa desea convertir? (eur, usd, eth, btc, bnb, etc)");
-        String divisa2 = scanner.nextLine().toLowerCase();
-        System.out.println("Cuanto desea convertir?");
-        String euros = scanner.nextLine();
+            if (i == 1) {
+                System.out.println("Bienvenido a la calculadora de divisas\n\nA que divisa desea convertir? (eur, usd, eth, btc, bnb, etc)");
+                String divisa = scanner.nextLine().toLowerCase();
+                System.out.println("Que divisa desea convertir? (eur, usd, eth, btc, bnb, etc)");
+                String divisa2 = scanner.nextLine().toLowerCase();
+                System.out.println("Cuanto desea convertir?");
+                String euros = scanner.nextLine();
 
-        double resultado = obj.hacerCalculo(divisa, divisa2, euros);
-        System.out.println("El resultado es: " + resultado + " " + divisa.toUpperCase());
+                double resultado = obj.hacerCalculo(divisa, divisa2, euros);
+                System.out.println("El resultado es: " + resultado + " " + divisa.toUpperCase() + "\n\n");
+            } else if (i == 2) {
+                System.out.println("Hasta pronto!");
+            } else {
+                System.out.println("Opcion no valida");
+            }
+        } while (i != 2);
+
 
     }
     private Map sendGet(String divisa) throws Exception {
