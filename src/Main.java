@@ -5,6 +5,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Map;
+import java.util.Scanner;
 
 public class Main {
     private final HttpClient httpClient = HttpClient.newBuilder()
@@ -13,20 +14,24 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         Main obj = new Main();
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Testing 1 - Send Http GET request");
-        obj.sendGet();
+        System.out.println("Bienvenido a la calculadora de divisas\nA que divisa desea convertir? (eur, usd, eth, btc, bnb, etc)");
+        String divisa = scanner.nextLine().toLowerCase();
+        System.out.println("Que divisa desea convertir? (eur, usd, eth, btc, bnb, etc)");
+        String divisa2 = scanner.nextLine().toLowerCase();
+        System.out.println("Cuanto desea convertir?");
+        String euros = scanner.nextLine();
 
-
-
-
+        double resultado = obj.hacerCalculo(divisa, divisa2, euros);
+        System.out.println("El resultado es: " + resultado + " " + divisa.toUpperCase());
 
     }
-    private void sendGet() throws Exception {
+    private Map sendGet(String divisa) throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur/usd.json"))
+                .uri(URI.create("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/" + divisa.toLowerCase() + ".json"))
                 .setHeader("User-Agent", "Java 11 HttpClient Bot")
                 .build();
 
@@ -35,22 +40,26 @@ public class Main {
         // print status code
         System.out.println("Status code: " + response.statusCode());
 
-        // print response body
-        //System.out.println(response.body());
-
         Gson gson = new Gson();
-
         Object obj = gson.fromJson(response.body(), Object.class);
 
-        Map<String, Object> map = (Map<String, Object>) obj;
+        return (Map<String, Object>) obj;
+    }
 
+    private Double hacerCalculo(String divisa, String divisa2, String euros) {
+        Main obj = new Main();
+        Object eur = null;
+        try {
+            eur = obj.sendGet(divisa2).get(divisa2);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        double usd = (double) map.get("usd");
-        System.out.println(usd);
+        Map<String, Object> eurMap = (Map<String, Object>) eur;
 
-
-
-
+        double exchange = (double) eurMap.get(divisa);
+        float eurosFloat = Float.parseFloat(euros);
+        return eurosFloat * exchange;
     }
 
 
