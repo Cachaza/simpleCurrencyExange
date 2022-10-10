@@ -38,7 +38,7 @@ public class Main {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         // print status code
-        //System.out.println("Status code: " + response.statusCode());
+        System.out.println("Status code: " + response.statusCode());
 
         Gson gson = new Gson();
         Object obj = gson.fromJson(response.body(), Object.class);
