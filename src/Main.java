@@ -1,7 +1,10 @@
+import com.google.gson.Gson;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
 
 public class Main {
     private final HttpClient httpClient = HttpClient.newBuilder()
@@ -23,7 +26,7 @@ public class Main {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
-                .uri(URI.create("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur.json"))
+                .uri(URI.create("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur/usd.json"))
                 .setHeader("User-Agent", "Java 11 HttpClient Bot")
                 .build();
 
@@ -33,7 +36,20 @@ public class Main {
         System.out.println("Status code: " + response.statusCode());
 
         // print response body
-        System.out.println(response.body());
+        //System.out.println(response.body());
+
+        Gson gson = new Gson();
+
+        Object obj = gson.fromJson(response.body(), Object.class);
+
+        Map<String, Object> map = (Map<String, Object>) obj;
+
+
+        double usd = (double) map.get("usd");
+        System.out.println(usd);
+
+
+
 
     }
 
