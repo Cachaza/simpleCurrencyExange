@@ -13,10 +13,10 @@ public class Main {
             .version(HttpClient.Version.HTTP_2)
             .build();
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         Main obj = new Main();
         Scanner scanner = new Scanner(System.in);
-        int i = 0;
+        int i;
         do {
             System.out.println("Para utilizar el programa, pulse 1, para salir pulse 2");
             i = Integer.parseInt(scanner.nextLine());
@@ -65,7 +65,7 @@ public class Main {
 
     private Double hacerCalculo(String divisa, String divisa2, String euros) {
         Main obj = new Main();
-        JsonElement eur = null;
+        JsonElement eur;
 
         try {
             eur = obj.sendGet(divisa2).get(divisa2);
