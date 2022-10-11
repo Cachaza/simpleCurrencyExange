@@ -1,10 +1,11 @@
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -39,7 +40,7 @@ public class Main {
 
 
     }
-    private Map sendGet(String divisa) throws Exception {
+    private JsonObject sendGet(String divisa) throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .GET()
@@ -52,24 +53,28 @@ public class Main {
         // print status code
         //System.out.println("Status code: " + response.statusCode());
 
-        Gson gson = new Gson();
-        Object obj = gson.fromJson(response.body(), Object.class);
 
-        return (Map<String, Object>) obj;
+        JsonObject obj = new Gson().fromJson(response.body(), JsonObject.class);
+
+        //System.out.println(obj.get(divisa));
+        return obj;
+
+
+
     }
 
     private Double hacerCalculo(String divisa, String divisa2, String euros) {
         Main obj = new Main();
-        Object eur = null;
+        JsonElement eur = null;
+
         try {
             eur = obj.sendGet(divisa2).get(divisa2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        Map<String, Object> eurMap = (Map<String, Object>) eur;
 
-        double exchange = (double) eurMap.get(divisa);
+        double exchange = eur.getAsJsonObject().get(divisa).getAsDouble();
         float eurosFloat = Float.parseFloat(euros);
         return eurosFloat * exchange;
     }
