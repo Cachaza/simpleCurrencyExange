@@ -2,17 +2,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.Scanner;
 
 public class Main {
-    private final HttpClient httpClient = HttpClient.newBuilder()
-            .version(HttpClient.Version.HTTP_2)
-            .build();
-
     public static void main(String[] args) {
         Main obj = new Main();
         Scanner scanner = new Scanner(System.in);
@@ -42,33 +37,20 @@ public class Main {
     }
     private JsonObject sendGet(String divisa) throws Exception {
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/" + divisa.toLowerCase() + ".json"))
-                .setHeader("User-Agent", "Java 11 HttpClient Bot")
-                .build();
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        URL url = new URL("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/" + divisa + ".json");
+        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        JsonObject jsonObject = new Gson().fromJson(in, JsonObject.class);
 
-        // print status code
-        //System.out.println("Status code: " + response.statusCode());
-
-
-        JsonObject obj = new Gson().fromJson(response.body(), JsonObject.class);
-
-        //System.out.println(obj.get(divisa));
-        return obj;
-
-
+        return jsonObject;
 
     }
 
     private Double hacerCalculo(String divisa, String divisa2, String euros) {
-        Main obj = new Main();
         JsonElement eur;
 
         try {
-            eur = obj.sendGet(divisa2).get(divisa2);
+            eur = sendGet(divisa2).get(divisa2);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
